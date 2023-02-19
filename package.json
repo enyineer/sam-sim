@@ -1,13 +1,12 @@
 {
   "name": "sam",
-  "packageManager": "yarn@3.4.1",
   "workspaces": [
     "app",
     "functions"
   ],
   "scripts": {
-    "app": "yarn workspace app",
-    "functions": "yarn workspace functions"
+    "app": "npm -w app",
+    "functions": "npm -w functions"
   },
   "dependencies": {
     "firebase-tools": "^11.23.1"
