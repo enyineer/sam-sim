@@ -10,7 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: yarn install && yarn firebase experiments:enable webframeworks
-      - run: yarn functions deploy
+      - run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
+      - run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && yarn functions deploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
