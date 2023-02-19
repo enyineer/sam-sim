@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm install && npm run firebase experiments:enable webframeworks
+      - run: npm install && npx firebase experiments:enable webframeworks
       - run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
       - run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npm run functions run deploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
