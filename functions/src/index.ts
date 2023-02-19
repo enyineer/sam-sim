@@ -18,7 +18,7 @@ export const ttsGen = functions
   .onCreate((snapshot) => {
     console.log(snapshot);
 
-    const ttsBucket = admin.storage().bucket('tts');
+    const ttsBucket = admin.storage().bucket();
 
-    ttsBucket.file('test.txt').save('foobar');
+    ttsBucket.file('alerts/test.txt').save('foobar');
   });
