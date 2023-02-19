@@ -1,4 +1,5 @@
-import * as functions from 'firebase-functions';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 
 // // Start writing functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -9,10 +10,12 @@ import * as functions from 'firebase-functions';
 // });
 
 export const ttsGen = functions
-  .region('us-central1')
   .firestore
-  .document('alert/{alertId}')
-  .onCreate((snapshot, context) => {
+  .document('alerts/{alertId}')
+  .onCreate((snapshot) => {
     console.log(snapshot);
-    console.log(context.auth);
+    
+    const ttsBucket = admin.storage().bucket('tts');
+
+    ttsBucket.file('test.txt').save('foobar');
   });

@@ -1,29 +1,25 @@
 {
-  "hosting": {
-    "source": "app",
-    "ignore": [
-      "**/.*",
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log"
-    ]
-  },
   "functions": [
     {
       "source": "functions",
       "codebase": "default",
       "ignore": [
-        "**/.*",
         "node_modules",
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "cd functions && yarn lint",
-        "cd functions && yarn build"
+        "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
-  ]
+  ],
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
 }

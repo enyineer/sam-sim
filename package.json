@@ -1,13 +1,12 @@
 {
   "name": "sam",
   "packageManager": "yarn@3.4.1",
-  "private": true,
   "workspaces": [
     "app",
     "functions"
   ],
   "scripts": {
-    "functions": "yarn workspace functions",
-    "app": "yarn workspace app"
+    "app": "yarn workspace app",
+    "functions": "yarn workspace functions"
   }
 }
