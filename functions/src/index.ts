@@ -12,6 +12,7 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 
 export const ttsGen = functions
+  .region('europe-west1')
   .firestore
   .document('alerts/{alertId}')
   .onCreate((snapshot) => {
