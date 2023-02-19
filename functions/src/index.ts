@@ -9,12 +9,14 @@ import * as admin from "firebase-admin";
 //   response.send("Hello from Firebase!");
 // });
 
+admin.initializeApp();
+
 export const ttsGen = functions
   .firestore
   .document('alerts/{alertId}')
   .onCreate((snapshot) => {
     console.log(snapshot);
-    
+
     const ttsBucket = admin.storage().bucket('tts');
 
     ttsBucket.file('test.txt').save('foobar');
