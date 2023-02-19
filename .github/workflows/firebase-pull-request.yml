@@ -14,7 +14,7 @@ jobs:
           node-version: 16
       - run: npm install && npx firebase experiments:enable webframeworks
       - run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
-      - run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npx firebase-tools deploy --only functions --json
+      - run: export FIREBASE_TOKEN=${{ secrets.FIREBASE_SERVICE_ACCOUNT }} && npx firebase-tools deploy --only functions --json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
