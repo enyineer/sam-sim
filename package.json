@@ -5,5 +5,9 @@
   "workspaces": [
     "app",
     "functions"
-  ]
+  ],
+  "scripts": {
+    "functions": "yarn workspace functions",
+    "app": "yarn workspace app"
+  }
 }
