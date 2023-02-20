@@ -53,11 +53,8 @@ export const ttsGen = functions
         throw new Error(`audioContent for snapshot ${snapshot.id} with text ${ttsText} was of invalid type string.`);
       }
 
-      const audioContentArrayBuffer = audioContent.buffer;
-      const audioContentBuffer = Buffer.alloc(audioContentArrayBuffer.byteLength, audioContentArrayBuffer);
-  
-      await ttsBucket.file(bucketPath).save(audioContentBuffer, {
-        contentType: 'audio/mpeg',
+      await file.save(Buffer.from(audioContent), {
+        resumable: false,
       });
   
       await snapshot.ref.update({
