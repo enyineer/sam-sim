@@ -22,7 +22,6 @@ export const ttsGen = functions
       },
       voice: {
         languageCode: 'de-DE',
-        ssmlGender: 'NEUTRAL',
         name: 'de-DE-Neural2-D',
       }
     });
