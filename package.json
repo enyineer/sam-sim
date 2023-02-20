@@ -2,10 +2,12 @@
   "name": "sam",
   "workspaces": [
     "app",
+    "client",
     "functions"
   ],
   "scripts": {
     "app": "npm -w app",
+    "client": "npm -w client",
     "functions": "npm -w functions"
   },
   "dependencies": {
