@@ -48,8 +48,17 @@ export const ttsGen = functions
       if (audioContent === undefined || audioContent === null) {
         throw new Error(`audioContent for document ${snapshot.id} was undefined for ttsText ${ttsText}`);
       }
+
+      if (typeof audioContent === 'string') {
+        throw new Error(`audioContent for snapshot ${snapshot.id} with text ${ttsText} was of invalid type string.`);
+      }
+
+      const audioContentArrayBuffer = audioContent.buffer;
+      const audioContentBuffer = Buffer.alloc(audioContentArrayBuffer.byteLength, audioContentArrayBuffer);
   
-      await ttsBucket.file(bucketPath).save(audioContent.toString());
+      await ttsBucket.file(bucketPath).save(audioContentBuffer, {
+        contentType: 'audio/mpeg',
+      });
   
       await snapshot.ref.update({
         ...data,
