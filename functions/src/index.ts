@@ -23,11 +23,13 @@ export const ttsGen = functions
     const file = ttsBucket.file(bucketPath);
     const fileExists = await file.exists();
     if (fileExists[0]) {
+      console.debug(`tts File for document ${snapshot.id} with text ${ttsText} already exists. Updating snapshot with existing storage path.`);
       await snapshot.ref.update({
         ...data,
         bucketPath,
       });
     } else {
+      console.debug(`tts File for document ${snapshot.id} with text ${ttsText} doesn't exists. Generating and updating snapshot with new storage path.`);
       const [response] = await ttsClient.synthesizeSpeech({
         audioConfig: {
           audioEncoding: 'MP3',
