@@ -55,6 +55,7 @@ export const ttsGen = functions
 
       await file.save(Buffer.from(audioContent), {
         resumable: false,
+        contentType: 'audio/mpeg3'
       });
   
       await snapshot.ref.update({
