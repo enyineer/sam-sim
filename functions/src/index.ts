@@ -1,13 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+import tts from "@google-cloud/text-to-speech";
 
 admin.initializeApp();
 
@@ -15,10 +8,28 @@ export const ttsGen = functions
   .region('europe-west1')
   .firestore
   .document('alerts/{alertId}')
-  .onCreate((snapshot) => {
-    console.log(snapshot);
+  .onCreate(async (snapshot) => {
+    const ttsClient = new tts.TextToSpeechClient();
 
-    const ttsBucket = admin.storage().bucket();
+    const data = snapshot.data();
 
-    ttsBucket.file('alerts/test.txt').save('foobar');
+    const [response] = await ttsClient.synthesizeSpeech({
+      audioConfig: {
+        audioEncoding: 'MP3',
+      },
+      input: {
+        text: data.ttsText,
+      },
+      voice: {
+        languageCode: 'de-DE',
+        ssmlGender: 'NEUTRAL',
+        name: 'de-DE-Neural2-D',
+      }
+    });
+
+    console.log(response);
+
+    // const ttsBucket = admin.storage().bucket();
+
+    // await ttsBucket.file(`alerts/${snapshot.id}.mp3`).save(response.audioContent);
   });
