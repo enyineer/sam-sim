@@ -1,4 +1,4 @@
-import { GongType } from 'sam-common/dist';
+import { AlarmType } from './AlarmType';
 import path from "path";
 import SoundPlay from "sound-play";
 import { existsSync } from "fs";
@@ -6,30 +6,42 @@ import { mkdir, writeFile } from "fs/promises";
 import { Bucket } from '@google-cloud/storage';
 
 export class SoundPlayer {
-  static async playAlarm(gongType: GongType, bucketPath: string, bucket: Bucket) {
+  static async playAlarm(alarmType: AlarmType, bucketPath: string, bucket: Bucket) {
     const localPath = await this.downloadTtsFile(bucketPath, bucket);
-    await this.playGong(gongType);
+    await this.playGong(alarmType);
     await this.playTtsFile(localPath);
   }
 
-  private static async playGong(gongType: GongType) {
-    let gongPath = this.getGongPath(gongType);
+  private static async playGong(alarmType: AlarmType) {
+    let gongPath = this.getGongPath(alarmType);
 
-    if (!existsSync(gongPath)) {
-      throw new Error(`Could not find Gong ${gongType} at path ${gongPath}`);
+    if (gongPath === null) {
+      console.debug(`Not playing gong because gongPath for gong ${alarmType} is null`);
+      return;
     }
 
-    console.debug(`Playing Gong ${gongType} from ${gongPath}`);
+    if (!existsSync(gongPath)) {
+      throw new Error(`Could not find Gong ${alarmType} at path ${gongPath}`);
+    }
+
+    console.debug(`Playing Gong ${alarmType} from ${gongPath}`);
 
     await SoundPlay.play(gongPath);
   }
 
-  private static getGongPath(gongType: GongType) {
-    switch(gongType) {
-      case GongType.LONG:
-        return path.join(__dirname, "assets", "gong-long.wav");
+  private static getGongPath(alarmType: AlarmType) {
+    const assetsPath = path.join(__dirname, "assets");
+    switch(alarmType) {
+      case AlarmType.EINZELFAHRZEUGALARM:
+        return path.join(assetsPath, "einzelfahrzeug-alarm_mit_gong.wav");
+      case AlarmType.VORALAM:
+        return path.join(assetsPath, "vor-alarm_mit_gong.wav");
+      case AlarmType.ZUGALARM:
+        return path.join(assetsPath, "zug-alarm_mit_gong.wav");
+      case AlarmType.KEINER:
+        return null;
       default:
-        throw new Error(`No file mapping for GongType ${gongType}`);
+        throw new Error(`No file mapping for GongType ${alarmType}`);
     }
   }
 

@@ -14,15 +14,15 @@ service cloud.firestore {
     }
 
   	match /stations/{stationId} {
-      // Always allow getting because alerting clients are anonymous
+      // Always allow getting because alarming clients are anonymous
     	allow get: if true;
       // Allow creating if user is verified
       allow create: if isVerified();
       // Allow updating, listing and deleting if user is owner of the station
       allow update, list, delete: if request.auth.uid in resource.data.ownerIds;
 
-      match /alerts/{alertId} {
-        // Always allow reading because alerting clients are anonymous
+      match /alarms/{alarmId} {
+        // Always allow reading because alarming clients are anonymous
         allow read: if true;
         // Allow writing if user is owner of the station
         allow create: if isStationOwner(stationId);

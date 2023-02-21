@@ -67,7 +67,7 @@ function CreateStationModal() {
       }
       closeAllModals();
     })}>
-      <TextInput label="Name" placeholder="Name der Wache" {...form.getInputProps('name')} />
+      <TextInput withAsterisk label="Name" placeholder="Name der Wache" {...form.getInputProps('name')} />
       <Button fullWidth mt="md" color="green" type="submit">
         Anlegen
       </Button>
