@@ -72,7 +72,7 @@ const main = async () => {
       ) {
         ledManager.startFlashing();
         await SoundPlayer.playAlarm(
-          data.gongType,
+          data.type,
           data.bucketPath,
           alarmsStorage
         );
