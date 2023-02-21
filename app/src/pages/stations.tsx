@@ -2,13 +2,12 @@ import {
   Title,
   Flex,
   Text,
-  Table,
   Button,
   CopyButton,
   ActionIcon,
   Tooltip,
 } from "@mantine/core";
-import { IconArrowRight, IconCopy } from "@tabler/icons-react";
+import { IconArrowRight, IconCirclePlus, IconCopy } from "@tabler/icons-react";
 import { collection, orderBy, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useFirestore, useUser, useFirestoreCollectionData } from "reactfire";
@@ -17,6 +16,8 @@ import { openCreateStationModal } from "../components/modals/createStationModal"
 export default function StationsPage() {
   const { status: userStatus, data: userData } = useUser();
   const navigate = useNavigate();
+  const firestore = useFirestore();
+  const stationsCollection = collection(firestore, "stations");
 
   if (userStatus !== "success") {
     return <Text>Loading...</Text>;
@@ -25,9 +26,6 @@ export default function StationsPage() {
   if (userData === null || !userData.uid) {
     return <Text>Unauthorized</Text>;
   }
-
-  const firestore = useFirestore();
-  const stationsCollection = collection(firestore, "stations");
 
   const stationsQuery = query(
     stationsCollection,
@@ -75,9 +73,7 @@ export default function StationsPage() {
       <Title>Wachen</Title>
       {rows}
       {rows.length === 0 && <Text>Keine Wachen erstellt</Text>}
-      <Button color="green" onClick={() => openCreateStationModal()}>
-        Neu
-      </Button>
+      <Button leftIcon={<IconCirclePlus size={18} />} color="green" onClick={() => openCreateStationModal()} />
     </Flex>
   );
 }
