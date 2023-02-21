@@ -6,8 +6,6 @@ import { useFirestore, useUser, useFirestoreCollectionData } from 'reactfire';
 import { openCreateStationModal } from '../components/modals/createStationModal';
 
 export default function StationsPage() {
-  const firestore = useFirestore();
-  const stationsCollection = collection(firestore, 'stations');
   const {status: userStatus, data: userData} = useUser();
   const navigate = useNavigate();
 
@@ -17,13 +15,16 @@ export default function StationsPage() {
     )
   }
 
-  if (userData === null) {
+  if (userData === null || !userData.uid) {
     return (
       <Text>Unauthorized</Text>
     )
   }
 
-  const stationsQuery = query(stationsCollection, where('ownerIds', 'array-contains', userData?.uid), orderBy('name', 'asc'));
+  const firestore = useFirestore();
+  const stationsCollection = collection(firestore, 'stations');
+
+  const stationsQuery = query(stationsCollection, where('ownerIds', 'array-contains', userData.uid), orderBy('name', 'asc'));
   const {status: queryStatus, data: queryData} = useFirestoreCollectionData(stationsQuery, {
     idField: 'id',
   });

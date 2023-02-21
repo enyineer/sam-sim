@@ -16,13 +16,18 @@ import IndexPage from './pages';
 import LoginPage from './pages/auth/login';
 import StationPage from './pages/station';
 import StationsPage from './pages/stations';
+import { Text } from '@mantine/core';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { status: signInCheckStatus, data: signInCheckResult } = useSigninCheck();
   const location = useLocation();
 
   if (signInCheckStatus !== 'success') {
-    return <>Loading...</>;
+    return (
+      <Text>
+        Loading...
+      </Text>
+    );
   }
 
   if (!signInCheckResult.signedIn) {
@@ -34,8 +39,8 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 
 function App() {
   const firebaseApp = useFirebaseApp();
-  const firestoreInstance = getFirestore(firebaseApp);
   const authInstance = getAuth(firebaseApp);
+  const firestoreInstance = getFirestore(firebaseApp);
   
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -51,15 +56,16 @@ function App() {
   )
 
   return (
-    <FirestoreProvider sdk={firestoreInstance}>
-      <AuthProvider sdk={authInstance}>
+    <AuthProvider sdk={authInstance}>
+      <FirestoreProvider sdk={firestoreInstance}>
         <NotificationsProvider>
           <ModalsProvider>
             <RouterProvider router={router} />
           </ModalsProvider>
         </NotificationsProvider>
-      </AuthProvider>
-    </FirestoreProvider>
+      </FirestoreProvider>
+    </AuthProvider>
+    
   )
 }
 

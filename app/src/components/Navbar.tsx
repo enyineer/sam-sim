@@ -80,6 +80,18 @@ export function NavbarMinimal() {
 
   const logout = async () => {
     await auth.signOut();
+
+    // https://github.com/FirebaseExtended/reactfire/discussions/228#discussioncomment-2101193
+    const reactFirePreloadedObservables = (globalThis as Record<string, unknown>)['_reactFirePreloadedObservables'] as
+      | Map<string, unknown>
+      | undefined;
+    if (reactFirePreloadedObservables) {
+      Array.from(reactFirePreloadedObservables.keys())
+        .filter((key) => key.includes('firestore'))
+        .forEach((key) =>
+          reactFirePreloadedObservables.delete(key)
+        );
+    }
   }
 
   return (
