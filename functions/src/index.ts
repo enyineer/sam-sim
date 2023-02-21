@@ -51,7 +51,7 @@ export const ttsGen = functions
       
       const audioContentAsString = audioContent.toString();
 
-      await file.save(Buffer.from(audioContentAsString, 'binary'), {
+      await file.save(Buffer.from(audioContentAsString, 'base64'), {
         resumable: false,
         contentType: 'audio/mpeg3'
       });
