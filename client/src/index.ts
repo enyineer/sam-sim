@@ -6,6 +6,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 import { LEDManager } from './ledManager';
+import { GongType } from 'sam-common/dist';
 
 dotenv.config();
 
@@ -46,8 +47,6 @@ const cachePath = path.join(__dirname, "..", "cache");
 
 const alertsFirestore = firestore.collection(`stations/${stationId}/alerts`);
 const alertsStorage = storage.bucket(bucketName);
-
-const gongPath = path.join(__dirname, "assets", "gong.wav");
 
 const ledManager = new LEDManager();
 
@@ -90,7 +89,15 @@ const main = async () => {
 
           ledManager.startFlashing();
           
-          await SoundPlay.play(gongPath);
+          switch(data.gongType) {
+            case GongType.LONG:
+              const gongPath = path.join(__dirname, "assets", "gong.wav");
+              await SoundPlay.play(gongPath);
+              break;
+            default:
+              throw new Error(`No file mapping for GongType ${data.gongType}`);
+          }
+          
           await SoundPlay.play(localPath);
         } else {
           console.debug(`Document ${change.doc.id} has no bucketPath set yet - Ignoring.`);

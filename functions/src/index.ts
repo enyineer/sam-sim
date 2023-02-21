@@ -9,7 +9,7 @@ admin.initializeApp();
 export const ttsGen = functions
   .region('europe-west1')
   .firestore
-  .document('alerts/{alertId}')
+  .document('stations/{stationId}/alerts/{alertId}')
   .onCreate(async (snapshot) => {
     const ttsClient = new tts.TextToSpeechClient();
 

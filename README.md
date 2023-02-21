@@ -1,8 +1,8 @@
 # sam
 
-## install
+## setup
 ```
-npm install
+npm run setup
 ```
 
 ## app

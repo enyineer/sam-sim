@@ -3,9 +3,14 @@
   "workspaces": [
     "app",
     "client",
+    "sam-common",
     "functions"
   ],
   "scripts": {
+    "setup": "npm install && npm run link:common && npm run link:app && npm run link:client",
+    "link:common": "cd sam-common && npm run build && npm link",
+    "link:app": "cd app && npm link sam-common",
+    "link:client": "cd client && npm link sam-common",
     "app": "npm -w app",
     "client": "npm -w client",
     "functions": "npm -w functions",

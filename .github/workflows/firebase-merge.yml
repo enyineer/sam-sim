@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install && npx firebase experiments:enable webframeworks
+      - run: npm run setup && npx firebase experiments:enable webframeworks
       - run: export FIREBASE_TOKEN='${{ secrets.FIREBASE_TOKEN_SAM_SIM_PROD }}' && npx firebase-tools deploy --only functions --json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
