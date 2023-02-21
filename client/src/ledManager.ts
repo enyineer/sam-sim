@@ -66,6 +66,8 @@ export class LEDManager {
 
     let remainingCycles = this.ledDuration / this.flashDuration;
 
+    console.debug(`Starting LED Flashing with ${remainingCycles} cycles`);
+
     this.currentInterval = setInterval(async () => {
       if (remainingCycles === 0) {
         await this.reset();
@@ -81,6 +83,7 @@ export class LEDManager {
   }
 
   async reset() {
+    console.debug(`Resetting LEDs`);
     if (this.currentInterval !== null) {
       clearInterval(this.currentInterval);
     }
@@ -91,7 +94,8 @@ export class LEDManager {
   private async setLeds(state: LEDState) {
     console.debug(`Setting LEDs states to: ${state === LEDState.ON ? chalk.green('ON') : chalk.red('OFF')}`)
     for (const led of this.ledPins) {
-      await led.write(LEDState.ON ? 1 : 0);
+      // Do not await write for faster execution
+      led.write(LEDState.ON ? 1 : 0);
     }
     this.ledState = state;
   }
