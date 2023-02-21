@@ -7,12 +7,12 @@ import { Bucket } from '@google-cloud/storage';
 
 export class SoundPlayer {
   static async playAlarm(alarmType: AlarmType, bucketPath: string, bucket: Bucket) {
-    const localPath = await this.downloadTtsFile(bucketPath, bucket);
     await this.playGong(alarmType);
+    const localPath = await this.downloadTtsFile(bucketPath, bucket);
     await this.playTtsFile(localPath);
   }
 
-  private static async playGong(alarmType: AlarmType) {
+  static async playGong(alarmType: AlarmType) {
     let gongPath = this.getGongPath(alarmType);
 
     if (gongPath === null) {

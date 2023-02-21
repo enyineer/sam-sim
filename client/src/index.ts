@@ -64,18 +64,17 @@ const main = async () => {
       const data = change.doc.data();
       // If the change is for a modified doc, check if it was added to the newDocumentsList
       // This prevents old alarms from being player again if they're getting updated
-      if (
-        // If doc was modified, it must have a bucketPath
-        (change.type === "modified" && data.bucketPath) ||
-        // New docs dont need a bucketPath if the ttsText is an empty string (no tts text, eg. vor prealarms)
-        (change.type === "added" && data.ttsText === "")
-      ) {
+      if (change.type === "modified" && data.bucketPath) {
         ledManager.startFlashing();
         await SoundPlayer.playAlarm(
           data.type,
           data.bucketPath,
           alarmsStorage
         );
+      }
+
+      if (change.type === "added" && data.ttsText === "") {
+        SoundPlayer.playGong(data.type);
       }
     }
   });
