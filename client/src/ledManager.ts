@@ -64,12 +64,14 @@ export class LEDManager {
       this.reset();
     }
 
+    this.isFlashing = true;
+
     let remainingCycles = this.ledDuration / this.flashDuration;
 
     console.debug(`Starting LED Flashing with ${remainingCycles} cycles`);
 
     this.currentInterval = setInterval(async () => {
-      if (remainingCycles === 0) {
+      if (remainingCycles <= 0) {
         await this.reset();
         return;
       }
@@ -78,8 +80,6 @@ export class LEDManager {
 
       remainingCycles--;
     }, this.flashDuration * 1000);
-
-    this.isFlashing = true;
   }
 
   async reset() {

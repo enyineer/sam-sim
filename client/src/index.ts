@@ -74,6 +74,7 @@ const main = async () => {
       }
 
       if (change.type === "added" && data.ttsText === "") {
+        ledManager.startFlashing();
         SoundPlayer.playGong(data.type);
       }
     }
