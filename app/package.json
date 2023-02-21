@@ -9,9 +9,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@mantine/core": "^5.10.4",
+    "@mantine/form": "^5.10.4",
+    "@mantine/hooks": "^5.10.4",
+    "@mantine/modals": "^5.10.4",
+    "@mantine/notifications": "^5.10.4",
+    "@tabler/icons-react": "^2.4.0",
+    "firebase": "^9.17.1",
+    "install": "^0.13.0",
+    "npm": "^9.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sam-common": "^0.0.1"
+    "react-router-dom": "^6.8.1",
+    "reactfire": "^4.2.2",
+    "sam-common": "^0.0.1",
+    "zod": "^3.20.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

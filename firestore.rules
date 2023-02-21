@@ -19,11 +19,11 @@ service cloud.firestore {
       // Allow creating if user is verified
       allow create: if isVerified();
       // Allow updating if user is owner of the station
-      allow update: if isStationOwner(stationId);
+      allow update: if request.auth.uid in resource.data.ownerIds;
       // Deny deleting
       allow delete: if false;
       // Only allow listing for stations owned by user
-      allow list: if isStationOwner(stationId);
+      allow list: if request.auth.uid in resource.data.ownerIds;
 
       match /alerts/{alertId} {
         // Always allow reading because alerting clients are anonymous

@@ -1,33 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { ModalsProvider } from '@mantine/modals';
+import { NotificationsProvider } from '@mantine/notifications';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+  RouterProvider,
+  useLocation
+} from "react-router-dom";
+import { useFirebaseApp, FirestoreProvider, AuthProvider, useSigninCheck } from 'reactfire';
+import DefaultLayout from './layouts/default';
+import IndexPage from './pages';
+import LoginPage from './pages/auth/login';
+import StationPage from './pages/station';
+import StationsPage from './pages/stations';
+
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { status: signInCheckStatus, data: signInCheckResult } = useSigninCheck();
+  const location = useLocation();
+
+  if (signInCheckStatus !== 'success') {
+    return <>Loading...</>;
+  }
+
+  if (!signInCheckResult.signedIn) {
+    return <Navigate to={`/auth/login?from=${encodeURIComponent(location.pathname)}`} replace />;
+  }
+
+  return children;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const firebaseApp = useFirebaseApp();
+  const firestoreInstance = getFirestore(firebaseApp);
+  const authInstance = getAuth(firebaseApp);
+  
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path='/' element={<DefaultLayout />}>
+        <Route index element={<IndexPage />} />
+        <Route path='stations'>
+          <Route index element={<ProtectedRoute children={<StationsPage />} />} />
+          <Route path=':stationId' element={<ProtectedRoute children={<StationPage />} />} />
+        </Route>
+        <Route path='auth/login' element={<LoginPage />} />
+      </Route>
+    )
+  )
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <FirestoreProvider sdk={firestoreInstance}>
+      <AuthProvider sdk={authInstance}>
+        <NotificationsProvider>
+          <ModalsProvider>
+            <RouterProvider router={router} />
+          </ModalsProvider>
+        </NotificationsProvider>
+      </AuthProvider>
+    </FirestoreProvider>
   )
 }
 
