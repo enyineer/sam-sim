@@ -45,15 +45,15 @@ export const ttsGen = functions
   
       const audioContent = response.audioContent;
   
-      if (audioContent === undefined || audioContent === null) {
-        throw new Error(`audioContent for document ${snapshot.id} was undefined for ttsText ${ttsText}`);
+      if (audioContent === undefined || audioContent === null || typeof audioContent === 'string') {
+        throw new Error(`audioContent for document ${snapshot.id} was of invalid type ${typeof audioContent} for ttsText ${ttsText}`);
       }
       
       const audioContentAsString = audioContent.toString();
 
       console.log(audioContentAsString);
 
-      await file.save(Buffer.from(audioContentAsString, 'base64'), {
+      await file.save(Buffer.from(audioContentAsString, 'binary'), {
         resumable: false,
         contentType: 'audio/mpeg3'
       });
