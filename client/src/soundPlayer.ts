@@ -34,7 +34,7 @@ export class SoundPlayer {
     switch(alarmType) {
       case AlarmType.EINZELFAHRZEUGALARM:
         return path.join(assetsPath, "einzelfahrzeug-alarm_mit_gong.wav");
-      case AlarmType.VORALAM:
+      case AlarmType.VORALARM:
         return path.join(assetsPath, "vor-alarm_mit_gong.wav");
       case AlarmType.ZUGALARM:
         return path.join(assetsPath, "zug-alarm_mit_gong.wav");
