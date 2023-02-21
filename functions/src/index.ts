@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import tts from "@google-cloud/text-to-speech";
 import * as hash from "object-hash";
+import { writeFile } from "fs/promises";
 
 admin.initializeApp();
 
@@ -48,12 +49,15 @@ export const ttsGen = functions
       if (audioContent === undefined || audioContent === null || typeof audioContent === 'string') {
         throw new Error(`audioContent for document ${snapshot.id} was of invalid type ${typeof audioContent} for ttsText ${ttsText}`);
       }
-      
-      const audioContentAsString = audioContent.toString();
 
-      await file.save(Buffer.from(audioContentAsString, 'base64'), {
+      const localPath = `/tmp/${ttsTextHash}.mp3`;
+
+      await writeFile(localPath, audioContent);
+
+      await ttsBucket.upload(localPath, {
         resumable: false,
-        contentType: 'audio/mpeg3'
+        contentType: 'audio/mpeg3',
+        destination: bucketPath,
       });
   
       await snapshot.ref.update({
