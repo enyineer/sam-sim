@@ -7,11 +7,13 @@ import {
   ActionIcon,
   Tooltip,
 } from "@mantine/core";
-import { IconArrowRight, IconCirclePlus, IconCopy } from "@tabler/icons-react";
-import { collection, orderBy, query, where } from "firebase/firestore";
+import { IconArrowRight, IconCirclePlus, IconCopy, IconTrash } from "@tabler/icons-react";
+import { collection, deleteDoc, doc, orderBy, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useFirestore, useUser, useFirestoreCollectionData } from "reactfire";
 import { openCreateStationModal } from "../components/modals/createStationModal";
+import { showNotification } from "@mantine/notifications";
+import { openConfirmModal } from '@mantine/modals';
 
 export default function StationsPage() {
   const { status: userStatus, data: userData } = useUser();
@@ -43,10 +45,46 @@ export default function StationsPage() {
     return <Text>Loading...</Text>;
   }
 
+  const deleteStation = async (id: string) => {
+    openConfirmModal({
+      title: 'Löschen bestätigen',
+      children: (
+        <Text size="sm">
+          Wirklich die Wache löschen?
+        </Text>
+      ),
+      labels: { confirm: 'Löschen', cancel: 'Abbrechen' },
+      onConfirm: async () => {
+        try {
+          await deleteDoc(doc(firestore, 'stations', id));
+          showNotification({
+            message: 'Wache gelöscht',
+            color: 'green',
+          });
+        } catch (err) {
+          if (err instanceof Error) {
+            showNotification({
+              message: `Konnte Wache nicht löschen: ${err.message}`,
+              color: 'red',
+            });
+          }
+        }
+      },
+    });
+  }
+
   const rows = queryData.map((doc) => (
     <Flex key={doc.id} justify="space-between">
       <Text>{doc.name}</Text>
       <Flex gap="xs">
+        <Tooltip label="Löschen">
+          <ActionIcon
+            color="red"
+            onClick={() => deleteStation(doc.id)}
+          >
+            <IconTrash size={16} />
+          </ActionIcon>
+        </Tooltip>
         <CopyButton value={doc.id}>
           {({ copied, copy }) => (
             <Tooltip label={copied ? "id kopiert" : "id kopieren"}>
