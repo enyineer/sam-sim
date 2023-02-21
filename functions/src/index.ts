@@ -48,12 +48,12 @@ export const ttsGen = functions
       if (audioContent === undefined || audioContent === null) {
         throw new Error(`audioContent for document ${snapshot.id} was undefined for ttsText ${ttsText}`);
       }
+      
+      const audioContentAsString = audioContent.toString();
 
-      if (typeof audioContent === 'string') {
-        throw new Error(`audioContent for snapshot ${snapshot.id} with text ${ttsText} was of invalid type string.`);
-      }
+      console.log(audioContentAsString);
 
-      await file.save(Buffer.from(audioContent, 'base64'), {
+      await file.save(Buffer.from(audioContentAsString, 'base64'), {
         resumable: false,
         contentType: 'audio/mpeg3'
       });
