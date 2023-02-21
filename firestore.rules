@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth.uid != null;
+    }
+    function isVerified() {
+      return isAuthenticated() && request.auth.token.email_verified == true;
+    }
+    // Checks whether the user is authenticated, a user document exists and the user is in the owners list of the party
+    function isStationOwner(stationId) {
+      return isAuthenticated() &&
+        request.auth.uid in get(/databases/$(database)/documents/stations/$(stationId)).data.ownerIds;
+    }
+
+  	match /stations/{stationId} {
+      // Always allow getting because alerting clients are anonymous
+    	allow get: if true;
+      // Allow creating if user is verified
+      allow create: if isVerified();
+      // Allow updating if user is owner of the station
+      allow update: if isStationOwner(stationId);
+      // Deny deleting
+      allow delete: if false;
+      // Only allow listing for stations owned by user
+      allow list: if isStationOwner(stationId);
+
+      match /alerts/{alertId} {
+        // Always allow reading because alerting clients are anonymous
+        allow read: if true;
+        // Allow writing if user is owner of the station
+        allow create: if isStationOwner(stationId);
+        // Deny updating and deleting
+        allow update, delete: if false;
+      }
+    }
+    match /{document=**} {
+      // Deny all operations not defined above
+      allow read, write: if false;
+    }
+  }
+}

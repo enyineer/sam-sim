@@ -8,7 +8,8 @@
   "scripts": {
     "app": "npm -w app",
     "client": "npm -w client",
-    "functions": "npm -w functions"
+    "functions": "npm -w functions",
+    "rules:deploy": "firebase deploy --only firestore:rules,storage"
   },
   "dependencies": {
     "firebase-tools": "^11.23.1"
