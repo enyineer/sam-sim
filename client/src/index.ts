@@ -5,11 +5,14 @@ import { Storage } from '@google-cloud/storage';
 import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
+import { LEDManager } from './ledManager';
 
 dotenv.config();
 
 const projectId = process.env.GOOGLE_PROJECT_ID;
 const saKeyName = process.env.GOOGLE_SA_NAME;
+const bucketName = process.env.BUCKET_NAME;
+const stationId = process.env.FIRESTORE_STATION_ID;
 
 if (projectId === undefined) {
   throw new Error(`GOOGLE_PROJECT_ID not set.`);
@@ -21,8 +24,12 @@ if (saKeyName === undefined) {
 
 const saKeyPath = path.join(__dirname, '..', 'serviceAccount', saKeyName);
 
-if (!existsSync(saKeyPath)) {
-  throw new Error(`Could not find SA Key File at ${saKeyPath}`);
+if (bucketName === undefined) {
+  throw new Error(`BUCKET_NAME not set.`);
+}
+
+if (stationId === undefined) {
+  throw new Error(`FIRESTORE_STATION_ID not set.`);
 }
 
 const firestore = new Firestore({
@@ -37,20 +44,38 @@ const storage = new Storage({
 
 const cachePath = path.join(__dirname, "..", "cache");
 
-const alertsFirestore = firestore.collection('alerts');
-const alertsStorage = storage.bucket('sam-sim-prod.appspot.com');
+const alertsFirestore = firestore.collection(`stations/${stationId}/alerts`);
+const alertsStorage = storage.bucket(bucketName);
 
 const gongPath = path.join(__dirname, "assets", "gong.wav");
+
+const ledManager = new LEDManager();
+
+let initialSnapshot = true;
+
+let newSnapshotList: string[] = [];
 
 const main = async () => {
   await mkdir(cachePath, { recursive: true });
 
   alertsFirestore.onSnapshot(async (snapshot) => {
+    // Do not react on the initial snapshot event. This contains old alerts
+    if (initialSnapshot) {
+      initialSnapshot = false;
+      return;
+    }
+
     for (const change of snapshot.docChanges()) {
-      if (change.type === "modified" || change.type === "added") {
+      if (change.type === "added") {
+        newSnapshotList.push(change.doc.id);
+        console.debug(`Adding doc ${change.doc.id} to newSnapshotList - Waiting for modification with bucketPath`)
+      }
+
+      if (change.type === "modified" && newSnapshotList.includes(change.doc.id)) {
         const data = change.doc.data();
 
         if (data.bucketPath) {
+          newSnapshotList = newSnapshotList.filter(el => el !== change.doc.id);
           const file = alertsStorage.file(data.bucketPath);
           const localPath = path.join(cachePath, file.name);
 
@@ -62,6 +87,8 @@ const main = async () => {
           } else {
             console.debug(`File ${file.name} already existed. Playing from Cache.`);
           }
+
+          ledManager.startFlashing();
           
           await SoundPlay.play(gongPath);
           await SoundPlay.play(localPath);
