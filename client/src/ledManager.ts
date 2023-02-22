@@ -54,6 +54,7 @@ export class LEDManager {
   }
 
   async startFlashing() {
+    console.debug(`Starting LEDs for ${this.ledDuration} seconds.`);
     await this.reset();
     await this.setLeds(LEDState.ON);
     this.currentTimeout = setTimeout(async () => {
