@@ -50,7 +50,7 @@ export const ttsGen = functions
         },
         voice: {
           languageCode: 'de-DE',
-          name: 'de-DE-Neural2-F',
+          name: 'de-DE-Wavenet-C',
         }
       });
   
