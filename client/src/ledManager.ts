@@ -9,11 +9,8 @@ enum LEDState {
 export class LEDManager {
   private readonly ledPins: Gpio[];
   private readonly ledDuration: number;
-  private readonly flashDuration: number;
 
-  private isFlashing: boolean;
-  private currentInterval: ReturnType<typeof setInterval> | null;
-  private ledState: LEDState;
+  private currentTimeout: ReturnType<typeof setInterval> | null;
 
   constructor() {
     const ledPins = process.env.LED_PINS;
@@ -48,10 +45,7 @@ export class LEDManager {
       this.ledDuration = parsedEl;
     }
 
-    this.flashDuration = 0.5;
-    this.isFlashing = false;
-    this.currentInterval = null;
-    this.ledState = LEDState.OFF;
+    this.currentTimeout = null;
 
     this.reset();
 
@@ -60,43 +54,25 @@ export class LEDManager {
   }
 
   async startFlashing() {
-    if (this.isFlashing) {
-      this.reset();
-    }
-
-    this.isFlashing = true;
-
-    let remainingCycles = this.ledDuration / this.flashDuration;
-
-    console.debug(`Starting LED Flashing with ${remainingCycles} cycles`);
-
-    this.currentInterval = setInterval(async () => {
-      if (remainingCycles <= 0) {
-        await this.reset();
-        return;
-      }
-
-      await this.setLeds(this.ledState === LEDState.ON ? LEDState.OFF : LEDState.ON);
-
-      remainingCycles--;
-    }, this.flashDuration * 1000);
+    await this.reset();
+    await this.setLeds(LEDState.ON);
+    this.currentTimeout = setTimeout(async () => {
+      await this.reset();
+    }, this.ledDuration * 1000);
   }
 
   async reset() {
     console.debug(`Resetting LEDs`);
-    if (this.currentInterval !== null) {
-      clearInterval(this.currentInterval);
+    if (this.currentTimeout !== null) {
+      clearTimeout(this.currentTimeout);
     }
     await this.setLeds(LEDState.OFF);
-    this.isFlashing = false;
   }
 
   private async setLeds(state: LEDState) {
     console.debug(`Setting LEDs states to: ${state === LEDState.ON ? chalk.green('ON') : chalk.red('OFF')}`)
     for (const led of this.ledPins) {
-      // Do not await write for faster execution
-      led.write(LEDState.ON ? 1 : 0);
+      await led.write(LEDState.ON ? 1 : 0);
     }
-    this.ledState = state;
   }
 }
