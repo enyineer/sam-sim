@@ -95,7 +95,7 @@ export function NavbarMinimal() {
   }
 
   return (
-    <Navbar width={{ base: 80 }} p="md">
+    <Navbar width={{ base: 80 }} p="md" zIndex={0}>
       <Center>
         <img src={logo} width={20}/>
       </Center>

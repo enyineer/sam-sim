@@ -11,6 +11,7 @@ export const openCreateStationModal = () => {
   openModal({
     title: 'Wache anlegen',
     children: <CreateStationModal />,
+    zIndex: 1000,
   });
 }
 

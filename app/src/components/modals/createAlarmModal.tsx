@@ -16,6 +16,7 @@ export const openCreateAlarmModal = (props: CreateAlarmModalProps) => {
   openModal({
     title: 'Alarm ausführen',
     children: <CreateAlarmModal {...props} />,
+    zIndex: 1000,
   });
 }
 
