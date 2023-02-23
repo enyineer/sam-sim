@@ -2,13 +2,11 @@
   "name": "sam",
   "workspaces": [
     "app",
-    "client",
     "functions"
   ],
   "scripts": {
     "setup": "npm install",
     "app": "npm -w app",
-    "client": "npm -w client",
     "functions": "npm -w functions",
     "rules:deploy": "firebase deploy --only firestore:rules,storage"
   },
