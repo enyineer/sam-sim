@@ -6,6 +6,21 @@ import { writeFile } from "fs/promises";
 
 admin.initializeApp();
 
+export const userCreation = functions
+  .region('europe-west1')
+  .auth
+  .user()
+  .onCreate(async (user) => {
+    const dbUser = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoUrl: user.photoURL,
+    }
+
+    await admin.firestore().collection('users').add(dbUser);
+  });
+
 export const ttsGen = functions
   .region('europe-west1')
   .firestore
