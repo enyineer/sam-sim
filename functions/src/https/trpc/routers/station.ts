@@ -1,11 +1,10 @@
-import { protectedProcedure } from '../auth';
-import { t } from '../server';
+import { protectedProcedure, TRPCInstance } from '../server';
 import { z } from "zod";
 import { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
 import * as admin from "firebase-admin";
 import { TRPCError } from '@trpc/server';
 
-export const stationRouter = t.router({
+export const getStationRouter = (trpc: TRPCInstance) => trpc.router({
   getOwners: protectedProcedure
     .input(
       z.object({
