@@ -3,23 +3,14 @@ import * as admin from "firebase-admin";
 import tts from "@google-cloud/text-to-speech";
 import * as hash from "object-hash";
 import { writeFile } from "fs/promises";
+import { app } from './https/express';
 
 admin.initializeApp();
 
-export const userCreation = functions
+export const expressApp = functions
   .region('europe-west1')
-  .auth
-  .user()
-  .onCreate(async (user) => {
-    const dbUser = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoUrl: user.photoURL,
-    }
-
-    await admin.firestore().collection('users').add(dbUser);
-  });
+  .https
+  .onRequest(app);
 
 export const ttsGen = functions
   .region('europe-west1')
