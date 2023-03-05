@@ -67,14 +67,14 @@ export const getStationRouter = (trpc: TRPCInstance) => trpc.router({
       } catch (err) {
         throw new TRPCError({
           code: 'NOT_FOUND',
-          message: `No user with email ${input.email} registered`,
+          message: `Kein Nutzer mit email ${input.email} registriert`,
         });
       }
 
       if (ownerIds.includes(targetUser.uid)) {
         throw new TRPCError({
           code: 'CONFLICT',
-          message: `User with email ${input.email} is already an owner of this station`,
+          message: `Nutzer mit email ${input.email} ist bereits Inhaber`,
         });
       }
 
@@ -97,6 +97,13 @@ export const getStationRouter = (trpc: TRPCInstance) => trpc.router({
       })
     )
     .mutation(async ({input, ctx}) => {
+      if (input.uid === ctx.user.uid) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Sie können Sich nicht selbst entfernen',
+        });
+      }
+      
       const {docRef, data} = await getStationForOwner({
         stationId: input.stationId,
         user: ctx.user,
@@ -107,7 +114,7 @@ export const getStationRouter = (trpc: TRPCInstance) => trpc.router({
       if (!ownerIds.includes(input.uid)) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: `User with uid ${input.uid} is not an owner of this station`,
+          message: `Nutzer mit der ID ${input.uid} ist kein Inhaber der Station`,
         });
       }
 
@@ -134,7 +141,7 @@ const getStationForOwner = async (params: {
   if (!doc.exists) {
     throw new TRPCError({
       code: 'NOT_FOUND',
-      message: `Could not find station ${params.stationId}`
+      message: `Konnte Wache ${params.stationId} nicht finden`
     });
   }
   
@@ -143,7 +150,7 @@ const getStationForOwner = async (params: {
   if (data === undefined) {
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
-      message: `Doc data for station ${params.stationId} is undefined`
+      message: `Daten für Wache ${params.stationId} sind undefiniert`
     });
   }
 

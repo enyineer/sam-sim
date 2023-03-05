@@ -68,7 +68,7 @@ function CreateAlarmModal(props: CreateAlarmModalProps) {
       } catch (err) {
         if (err instanceof Error) {
           showNotification({
-            message: `Konnte Alarm nicht angeleg: ${err.message}`,
+            message: `Konnte Alarm nicht anlegen: ${err.message}`,
             color: 'red',
           });
         }

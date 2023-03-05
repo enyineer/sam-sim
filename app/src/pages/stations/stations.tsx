@@ -11,7 +11,7 @@ import { IconArrowRight, IconCirclePlus, IconCopy, IconTrash } from "@tabler/ico
 import { collection, deleteDoc, doc, orderBy, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useFirestore, useUser, useFirestoreCollectionData } from "reactfire";
-import { openCreateStationModal } from "../components/modals/createStationModal";
+import { openCreateStationModal } from "../../components/modals/createStationModal";
 import { showNotification } from "@mantine/notifications";
 import { openConfirmModal } from '@mantine/modals';
 

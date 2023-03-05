@@ -10,7 +10,7 @@ export type TRPCInstance = typeof t;
 
 const isAuthed = t.middleware(({ next, ctx }) => {
   if (ctx.user === null) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sie müssen angemeldet sein um diese Funktion zu verwenden' });
   }
   return next({
     ctx: {
