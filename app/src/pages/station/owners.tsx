@@ -56,7 +56,6 @@ export default function Owners(props: OwnersProps) {
   const rows = owners.data.ownerUsers.map((owner) => {
     return (
       <tr key={owner.uid}>
-        <td>{owner.uid}</td>
         <td>{owner.displayName || "N.A."}</td>
         <td>{owner.email || "N.A."}</td>
         <td>
@@ -91,7 +90,6 @@ export default function Owners(props: OwnersProps) {
         <Table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>E-Mail</th>
               <th></th>
