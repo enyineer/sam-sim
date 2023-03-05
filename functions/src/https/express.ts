@@ -8,7 +8,7 @@ export const app = express();
 
 app.use(cors({ origin: true }));
 app.use(
-  '/trpc',
+  '/',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext: createContext,

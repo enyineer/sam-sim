@@ -51,7 +51,7 @@ function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: 'https://europe-west1-sam-sim-prod.cloudfunctions.net/expressApp/trpc',
+          url: 'https://europe-west1-sam-sim-prod.cloudfunctions.net/trpc',
           // optional
           headers: (async () => {
             const currentUser = authInstance.currentUser;

@@ -6,7 +6,7 @@ import { ttsGenFunction } from './firestore/ttsGen';
 
 admin.initializeApp();
 
-export const expressApp = functions
+export const trpc = functions
   .region('europe-west1')
   .https
   .onRequest(app);
