@@ -1,3 +1,8 @@
 packages:
   - functions
   - app
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - protobufjs
