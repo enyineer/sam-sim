@@ -16,9 +16,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - run: npm run setup && npx firebase experiments:enable webframeworks
-      - run: export FIREBASE_TOKEN='${{ secrets.FIREBASE_TOKEN_SAM_SIM_PROD }}' && npx firebase-tools deploy --only functions
+          node-version: 20
+      - run: pnpm run setup && npx firebase experiments:enable webframeworks
+      - run: export FIREBASE_TOKEN='${{ secrets.FIREBASE_TOKEN_SAM_SIM_PROD }}' && pnpx firebase-tools deploy --only functions
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
