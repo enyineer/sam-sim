@@ -25,6 +25,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/object-hash": "^3.0.6",
     "firebase-functions-test": "^3.4.1",
     "jest": "^28.1.3",

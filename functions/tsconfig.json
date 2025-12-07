@@ -7,10 +7,13 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "typeRoots": ["types"],
+    "typeRoots": [
+      "types"
+    ],
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+  ],
 }
